@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cafe.jjdev.board.repository.BoardMapper">
+	<!-- article등록 -->
+	<insert id="articleInsert"
+			parameterType="cafe.jjdev.board.model.Article">
+		INSERT INTO
+		article(
+			article_title,
+			article_content,
+			article_writer,
+			article_date,
+			article_pw
+		) VALUES (
+			#{articleTitle},
+			#{articleContent},
+			#{articleWriter},
+			NOW(),
+			#{articlePw}
+		)
+	</insert>
+	
+	<!-- article 상세-->
+	<select id="articleDetail"
+			parameterType="cafe.jjdev.board.model.Article"
+			resultType="cafe.jjdev.board.model.Article">
+		SELECT
+			article_no articleNo,
+			article_title articleTitle,
+			article_content articleContent,
+			article_writer articleWriter,
+			article_date articleDate,
+			article_pw articlePw
+		FROM article
+		WHERE
+			article_no = #{articleNo}
+		
+		<!-- 	
+		SELECT                                        
+			article.article_no as articleNo,           
+			article.article_title as articleTitle,     
+			article.article_content as aritlceContent, 
+			article.article_writer as articleWriter,   
+			article.article_date as articleDate,       
+			reply.reply_no as replyNo,                 
+			reply.reply_content as replyContent,       
+			reply.reply_writer as replyWriter          
+		FROM article                                  
+		JOIN reply                                    
+		on article.article_no=#{articleNo} AND reply.article_no=#{articleNo}
+		 -->
+	</select>
+	
+	<!-- articleNo로 articleDetail 구하기 -->
+	<select id="articleDetailByArticleNo"
+			parameterType="int"
+			resultType="cafe.jjdev.board.model.Article">
+		SELECT
+			article_no articleNo,
+			article_title articleTitle,
+			article_content articleContent,
+			article_writer articleWriter,
+			article_date articleDate,
+			article_pw articlePw
+		FROM article
+		WHERE article_no = #{articleNo}
+	</select>
+	
+	<!-- article리스트 -->
+	<select id="articleList"
+			parameterType="java.util.Map"
+			resultType="cafe.jjdev.board.model.Article">
+		SELECT
+			article_no as articleNo,
+			article_title as articleTitle,
+			article_writer as articleWriter,
+			article_date as articleDate
+		FROM article
+		<where>
+			<if test="searchWord != null">
+				<choose>
+		 			<when test="searchType.equals('article_title')">
+						article_title LIKE CONCAT('%', #{searchWord}, '%')
+					</when>
+					<when test="searchType.equals('article_writer')">
+						article_writer LIKE CONCAT('%', #{searchWord}, '%')
+					</when>
+				</choose>
+			</if>
+		</where>
+		ORDER BY article_date DESC
+		LIMIT #{pageHelper.startRow}, #{pageHelper.linePerPage}
+	</select>
+	
+	<!-- 전체article 수 -->
+	<select id="selectTotalCount"
+            resultType="Integer">
+        SELECT
+            COUNT(*)
+        FROM article
+    </select>
+    
+    <!-- 전체 회원 수 구하기 (조건검색 포함)-->
+	<select id="articleCountBySearch"
+			parameterType="java.util.Map"
+			resultType="integer">
+		SELECT 
+			count(*) 
+		FROM article
+		<where>
+			<if test="searchWord != null">
+				<choose>
+		 			<when test="searchType.equals('article_title')">
+						article_title LIKE CONCAT('%', #{searchWord}, '%')
+					</when>
+					<when test="searchType.equals('article_content')">
+						article_content LIKE CONCAT('%', #{searchWord}, '%')
+					</when>
+					<when test="searchType.equals('article_writer')">
+			 			article_writer LIKE CONCAT('%', #{searchWord}, '%')
+					</when>
+				</choose>
+			</if>
+		</where>
+	</select>
+    
+
+    <!-- article 수정 -->
+    <update id="articleModify"
+            parameterType="cafe.jjdev.board.model.Article">
+        UPDATE article
+		SET
+			article_title=#{articleTitle},
+			article_content=#{articleContent},
+			article_date=NOW()
+		WHERE article_no=#{articleNo} AND article_pw=#{articlePw}
+    </update>
+    
+    <!-- article 삭제 -->
+    <delete id="articleDelete"
+    		parameterType="cafe.jjdev.board.model.Article">
+    	DELETE FROM article
+    	WHERE article_no=#{articleNo} AND article_pw=#{articlePw}
+    </delete>
+    
+    <!-- replyInsert -->
+    <insert id="replyInsert"
+    		parameterType="cafe.jjdev.board.model.Reply">
+    	INSERT INTO 
+		reply(
+			article_no,
+			reply_content,
+			reply_writer,
+			reply_pw
+		) VALUES (
+			#{articleNo},
+			#{replyContent},
+			#{replyWriter},
+			#{replyPw}
+		)
+    </insert>
+    
+    <!-- replyDetail -->
+    <select id="replyDetail"
+    		parameterType="cafe.jjdev.board.model.Reply"
+    		resultType="cafe.jjdev.board.model.Reply">
+    	SELECT
+    		reply_no replyNo,
+    		reply_pw replyPw,
+    		article_no articleNo
+    	FROM reply
+    	WHERE
+    		reply_no = #{replyNo}
+    </select>
+    
+    <!-- articleNo로 reply상세정보 구하기 -->
+    <select id="replyDetailByarticleNo"
+    		parameterType="cafe.jjdev.board.model.Reply"
+    		resultType="cafe.jjdev.board.model.Reply">
+    	SELECT
+    		reply_no replyNo,
+    		article_no articleNo
+    	FROM reply
+    	WHERE
+    		article_no = #{articleNo}
+    </select>
+    
+    <!-- replyList 뽑는 쿼리문 -->
+	<select id="replyList"
+			parameterType="cafe.jjdev.board.model.Reply"
+			resultType="cafe.jjdev.board.model.Reply">
+		SELECT
+			reply_no replyNo,
+			reply_content replyContent,
+			reply_writer replyWriter,
+			article_no articleNo
+		FROM reply
+		<where>
+			article_no = #{articleNo}
+		</where>
+		ORDER BY reply_no ASC
+	</select>
+	
+	<!-- articleNo로 replyList 구하기 -->
+	<select id="replyListByArticleNo"
+			parameterType="cafe.jjdev.board.model.Article"
+			resultType="cafe.jjdev.board.model.Reply">
+		SELECT
+			reply_no replyNo,
+			reply_content replyContent,
+			reply_writer replyWriter,
+			article_no articleNo
+		FROM reply
+		<where>
+			article_no = #{articleNo}
+		</where>
+		ORDER BY reply_no ASC
+	</select>
+	
+	<!-- replyModify -->
+	<update id="replyModify"
+			parameterType="cafe.jjdev.board.model.Reply">
+		UPDATE reply                                                 
+		SET
+			reply_content=#{replyContent}
+		WHERE article_no=#{articleNo} AND reply_no=#{replyNo} AND reply_pw=#{replyPw}
+	</update>
+	
+	<!-- replyDelete -->
+	<delete id="replyDelete"
+			parameterType="cafe.jjdev.board.model.Reply">
+		DELETE FROM reply 
+		WHERE reply_no=#{replyNo} AND reply_pw=#{replyPw}
+	</delete>
+	
+	<!-- replyDeleteWithArticle -->
+	<delete id="replyDeleteWithArticle"
+			parameterType="cafe.jjdev.board.model.Article">
+		DELETE FROM reply
+		WHERE article_no=#{articleNo}
+	</delete>
+</mapper>
