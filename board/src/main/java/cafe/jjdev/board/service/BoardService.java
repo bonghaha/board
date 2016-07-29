@@ -1,4 +1,4 @@
-package com.to.cdp.board.service;
+package cafe.jjdev.board.service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,9 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.to.cdp.board.model.Article;
-import com.to.cdp.board.model.Reply;
-
+import cafe.jjdev.board.model.Article;
+import cafe.jjdev.board.model.Reply;
 import cafe.jjdev.board.repository.BoardDao;
 
 @Service

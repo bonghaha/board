@@ -39,7 +39,7 @@
 		<property name="order" value="1" />
 	</bean>
 	
-	<context:component-scan base-package="com.to.cdp.board" />
+	<context:component-scan base-package="cafe.jjdev.board" />
 	
 	
 	

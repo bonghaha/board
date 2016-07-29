@@ -1,4 +1,4 @@
-package com.to.cdp.board.controller;
+package cafe.jjdev.board.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.to.cdp.board.model.Article;
-import com.to.cdp.board.model.PageHelper;
-import com.to.cdp.board.model.Reply;
-import com.to.cdp.board.service.BoardService;
+import cafe.jjdev.board.model.Article;
+import cafe.jjdev.board.model.PageHelper;
+import cafe.jjdev.board.model.Reply;
+import cafe.jjdev.board.service.BoardService;
 
 @Controller
 public class BoardController {

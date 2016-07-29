@@ -7,8 +7,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.to.cdp.board.model.Article;
-import com.to.cdp.board.model.Reply;
+import cafe.jjdev.board.model.Article;
+import cafe.jjdev.board.model.Reply;
 
 @Repository
 public class BoardDao {

@@ -1,4 +1,4 @@
-package com.to.cdp.board.model;
+package cafe.jjdev.board.model;
 
 public class Reply {
 	private int replyNo;

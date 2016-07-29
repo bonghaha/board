@@ -1,4 +1,4 @@
-package com.to.cdp.board;
+package cafe.jjdev.board;
 
 import java.text.DateFormat;
 import java.util.Date;
